@@ -1,0 +1,43 @@
+name: Playwright Tests
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Run at 06:00 UTC (08:00 CEST)
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.3.0
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies in web-app
+        run: cd packages/web-app && npm install
+
+      - name: Install dependencies in server
+        run: cd packages/server && npm install
+
+      - name: Install dependencies in e2e
+        run: cd packages/e2e && npm install
+
+      - name: Install Playwright Browsers
+        run: cd packages/e2e && npx playwright install chromium
+
+      - name: Run Playwright Tests
+        run: cd packages/e2e && npx playwright test
+        env:
+          CI: true
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: playwright-report
+          path: packages/e2e/playwright-report
+          retention-days: 30

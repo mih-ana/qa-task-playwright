@@ -1,0 +1,15 @@
+{
+  "name": "qa-automation-task",
+  "workspaces": [
+    "packages/server",
+    "packages/web-app"
+  ],
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run start --workspace=web-app | npm run start --workspace=server"
+  },
+  "author": "",
+  "license": "ISC"
+}
